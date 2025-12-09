@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { TaskService } from '../services/TaskService';
-import { LangGraphTaskAgent } from '../agents/LangGraphTaskAgent';
-import { FoundryTaskAgent } from '../agents/FoundryTaskAgent';
-import { ChatRequest } from '../types';
+import { TaskService } from '../services/TaskService.js';
+import { LangGraphTaskAgent } from '../agents/LangGraphTaskAgent.js';
+import { FoundryTaskAgent } from '../agents/FoundryTaskAgent.js';
+import { ChatRequest } from '../types/index.js';
 
 /**
  * This function sets up RESTful routes for managing tasks (CRUD operations) and chat endpoints
@@ -49,7 +49,7 @@ export function createApiRoutes(
                     info: {
                         title: 'Task Manager API',
                         version: '1.0.0',
-                        description: 'A simple task management API for Azure AI Foundry Agents'
+                        description: 'A simple task management API for Foundry agents'
                     },
                     servers: [
                         {

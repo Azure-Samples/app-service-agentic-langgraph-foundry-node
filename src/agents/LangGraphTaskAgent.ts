@@ -4,8 +4,8 @@ import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { MemorySaver } from '@langchain/langgraph';
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { TaskService } from '../services/TaskService';
-import { ChatMessage } from '../types';
+import { TaskService } from '../services/TaskService.js';
+import { ChatMessage } from '../types/index.js';
 
 export class LangGraphTaskAgent {
     private taskService: TaskService;

@@ -2,19 +2,25 @@ import express, { Request, Response } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import cors from 'cors';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import dotenv from 'dotenv';
 import swaggerUI from 'swagger-ui-express';
 
 // Services and Agents
-import { TaskService } from './services/TaskService';
-import { LangGraphTaskAgent } from './agents/LangGraphTaskAgent';
-import { FoundryTaskAgent } from './agents/FoundryTaskAgent';
-import { createApiRoutes } from './routes/api';
+import { TaskService } from './services/TaskService.js';
+import { LangGraphTaskAgent } from './agents/LangGraphTaskAgent.js';
+import { FoundryTaskAgent } from './agents/FoundryTaskAgent.js';
+import { createApiRoutes } from './routes/api.js';
 
 // Types
 import { 
     ChatRequest
-} from './types';
+} from './types/index.js';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables
 dotenv.config();

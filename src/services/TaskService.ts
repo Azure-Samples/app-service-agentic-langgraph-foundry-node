@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-import { TaskItem } from '../types';
+import { TaskItem } from '../types/index.js';
 
 /**
  * Service class for managing tasks with CRUD operations.
