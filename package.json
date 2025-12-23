@@ -13,7 +13,7 @@
   "dependencies": {
     "@azure/ai-projects": "^2.0.0-beta.2",
     "@azure/identity": "^4.13.0",
-    "@langchain/core": "^1.1.4",
+    "@langchain/core": "^1.1.8",
     "@langchain/langgraph": "^1.0.4",
     "@langchain/langgraph-supervisor": "^1.0.0",
     "@langchain/openai": "^1.1.3",
