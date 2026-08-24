@@ -5,9 +5,9 @@ param location string = resourceGroup().location
 
 var webAppHash = toLower(substring(uniqueString(envName), 0, 7))
 var webAppName = '${envName}-node-${webAppHash}'
-var easyAuthManagedIdentitySettingName = 'OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID'
+var appServiceAuthManagedIdentitySettingName = 'OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID'
 
-resource easyAuthIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+resource appServiceAuthIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: '${webAppName}-auth'
   location: location
 }
@@ -43,8 +43,8 @@ resource webApp 'Microsoft.Web/sites@2024-11-01' = {
           value: 'true'
         }
         {
-          name: easyAuthManagedIdentitySettingName
-          value: easyAuthIdentity.properties.clientId
+          name: appServiceAuthManagedIdentitySettingName
+          value: appServiceAuthIdentity.properties.clientId
         }
       ]
     }
@@ -52,7 +52,7 @@ resource webApp 'Microsoft.Web/sites@2024-11-01' = {
   identity: {
     type: 'SystemAssigned, UserAssigned'
     userAssignedIdentities: {
-      '${easyAuthIdentity.id}': {}
+      '${appServiceAuthIdentity.id}': {}
     }
   }
   tags: {
@@ -65,7 +65,7 @@ module entraApp 'entra-app.bicep' = {
   params: {
     envName: envName
     webAppUrl: 'https://${webApp.properties.defaultHostName}'
-    managedIdentityPrincipalId: easyAuthIdentity.properties.principalId
+    managedIdentityPrincipalId: appServiceAuthIdentity.properties.principalId
   }
 }
 
@@ -85,7 +85,7 @@ resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
         enabled: true
         registration: {
           clientId: entraApp.outputs.clientId
-          clientSecretSettingName: easyAuthManagedIdentitySettingName
+          clientSecretSettingName: appServiceAuthManagedIdentitySettingName
           openIdIssuer: '${environment().authentication.loginEndpoint}${subscription().tenantId}/v2.0'
         }
         validation: {

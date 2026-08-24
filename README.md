@@ -12,11 +12,11 @@ See [Tutorial: Build an agentic web app in Azure App Service with LangGraph or F
 - **LangGraph Agent**: Chat with an agent powered by LangGraph.
 - **Foundry agent**: Chat with an agent powered by Foundry agent Service.
 - **OpenAPI Schema**: Enables integration with Foundry agents.
-- **App Service Easy Auth**: Infrastructure enables Microsoft Entra authentication for all API endpoints.
+- **App Service authentication**: Infrastructure enables Microsoft Entra authentication for all API endpoints.
 
 ## Security configuration note
 
-The Bicep template enables App Service Easy Auth (`authsettingsV2`) with
+The Bicep template enables App Service authentication (`authsettingsV2`) with
 Microsoft Entra ID. The Microsoft Graph Bicep extension creates the tenant-local
 app registration, service principal, and federated identity credential. App
 Service uses a user-assigned managed identity as its client assertion, so the

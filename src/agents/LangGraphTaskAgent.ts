@@ -166,7 +166,7 @@ If you need more information to complete a request, ask the user for it.`
                 },
                 { 
                     configurable: { 
-                        // Easy Auth is enabled at App Service, so this sample intentionally uses
+                        // App Service authentication is enabled, so this sample intentionally uses
                         // one authenticated conversation thread managed on the server.
                         thread_id: this.conversationThreadId
                     } 

@@ -6,7 +6,7 @@ param envName string
 @description('URL of the deployed App Service app')
 param webAppUrl string
 
-@description('Principal ID of the user-assigned identity used by App Service Easy Auth')
+@description('Principal ID of the user-assigned identity used by App Service authentication')
 param managedIdentityPrincipalId string
 
 resource app 'Microsoft.Graph/applications@v1.0' = {
@@ -21,8 +21,8 @@ resource app 'Microsoft.Graph/applications@v1.0' = {
   }
 
   resource managedIdentityCredential 'federatedIdentityCredentials@v1.0' = {
-    name: '${app.uniqueName}/app-service-easy-auth'
-    description: 'Allow App Service Easy Auth to authenticate without a client secret'
+    name: '${app.uniqueName}/app-service-authentication'
+    description: 'Allow App Service authentication to use a managed identity instead of a client secret'
     audiences: [
       'api://AzureADTokenExchange'
     ]

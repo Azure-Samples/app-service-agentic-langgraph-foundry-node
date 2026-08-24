@@ -50,7 +50,7 @@ export class TaskManagerApp {
     private setupRoutes(): void {
         // Use the API routes module with /api prefix
         const apiRouter = createApiRoutes(this.taskService, this.langGraphAgent, this.foundryAgent);
-        // API auth is enforced by App Service Easy Auth (infra/main.bicep authsettingsV2).
+        // API auth is enforced by App Service authentication (infra/main.bicep authsettingsV2).
         this.app.use('/api', apiRouter);
 
         // Serve React app
