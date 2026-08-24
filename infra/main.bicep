@@ -46,6 +46,10 @@ resource webApp 'Microsoft.Web/sites@2024-11-01' = {
           name: appServiceAuthManagedIdentitySettingName
           value: appServiceAuthIdentity.properties.clientId
         }
+        {
+          name: 'WEBSITE_AUTH_AAD_ALLOWED_TENANTS'
+          value: tenant().tenantId
+        }
       ]
     }
   }
@@ -72,8 +76,10 @@ module entraApp 'entra-app.bicep' = {
 resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
   name: '${webApp.name}/authsettingsV2'
   properties: {
+    clearInboundClaimsMapping: 'false'
     platform: {
       enabled: true
+      runtimeVersion: '~1'
     }
     globalValidation: {
       requireAuthentication: true
@@ -83,21 +89,41 @@ resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
     identityProviders: {
       azureActiveDirectory: {
         enabled: true
+        isAutoProvisioned: true
+        login: {
+          disableWWWAuthenticate: false
+        }
         registration: {
           clientId: entraApp.outputs.clientId
           clientSecretSettingName: appServiceAuthManagedIdentitySettingName
-          openIdIssuer: '${environment().authentication.loginEndpoint}${subscription().tenantId}/v2.0'
+          openIdIssuer: 'https://sts.windows.net/${tenant().tenantId}/v2.0'
         }
         validation: {
           allowedAudiences: [
-            entraApp.outputs.clientId
+            'api://${entraApp.outputs.clientId}'
           ]
+          defaultAuthorizationPolicy: {
+            allowedApplications: [
+              entraApp.outputs.clientId
+            ]
+            allowedPrincipals: {}
+          }
         }
       }
     }
     login: {
+      cookieExpiration: {
+        convention: 'FixedTime'
+        timeToExpiration: '08:00:00'
+      }
+      nonce: {
+        nonceExpirationInterval: '00:05:00'
+        validateNonce: true
+      }
+      preserveUrlFragmentsForLogins: false
       tokenStore: {
         enabled: true
+        tokenRefreshExtensionHours: 72
       }
     }
     httpSettings: {
