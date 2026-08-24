@@ -16,9 +16,11 @@ See [Tutorial: Build an agentic web app in Azure App Service with LangGraph or F
 
 ## Security configuration note
 
-The Bicep template enables App Service Easy Auth (`authsettingsV2`) and expects
-an Entra app registration client ID in `AZURE_AUTH_APP_CLIENT_ID` during
-`azd up`.
+The Bicep template enables App Service Easy Auth (`authsettingsV2`) with
+Microsoft Entra ID. The Microsoft Graph Bicep extension creates the tenant-local
+app registration, service principal, and federated identity credential. App
+Service uses a user-assigned managed identity as its client assertion, so the
+authentication setup is fully declarative and does not use client secrets.
 
 ## Project Structure
 

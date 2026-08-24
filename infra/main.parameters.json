@@ -7,9 +7,6 @@
     },
     "location": {
       "value": "${AZURE_LOCATION}"
-    },
-    "easyAuthClientId": {
-      "value": "${AZURE_AUTH_APP_CLIENT_ID}"
     }
   }
 }
