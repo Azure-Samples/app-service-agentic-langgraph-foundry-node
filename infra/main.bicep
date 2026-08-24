@@ -2,6 +2,8 @@
 param envName string
 @description('Location for all resources')
 param location string = resourceGroup().location
+@description('Microsoft Entra app registration client ID for App Service Easy Auth')
+param easyAuthClientId string
 
 var webAppHash = toLower(substring(uniqueString(envName), 0, 7))
 var webAppName = '${envName}-node-${webAppHash}'
@@ -37,6 +39,38 @@ resource webApp 'Microsoft.Web/sites@2024-11-01' = {
           value: 'true'
         }
       ]
+    }
+  }
+
+  resource webAppAuthSettings 'config@2024-11-01' = {
+    name: 'authsettingsV2'
+    properties: {
+      platform: {
+        enabled: true
+      }
+      globalValidation: {
+        requireAuthentication: true
+        unauthenticatedClientAction: 'Return401'
+      }
+      identityProviders: {
+        azureActiveDirectory: {
+          enabled: true
+          registration: {
+            clientId: easyAuthClientId
+            openIdIssuer: '${environment().authentication.loginEndpoint}${subscription().tenantId}/v2.0'
+          }
+          validation: {
+            allowedAudiences: [
+              easyAuthClientId
+            ]
+          }
+        }
+      }
+      login: {
+        tokenStore: {
+          enabled: true
+        }
+      }
     }
   }
   identity: {

@@ -12,7 +12,7 @@ export class LangGraphTaskAgent {
     private llm: AzureChatOpenAI | null = null;
     private agent: any = null;
     private memory: MemorySaver;
-    private sessionIds: Map<string, string> = new Map();
+    private readonly conversationThreadId = 'authenticated-conversation';
 
     /**
      * This contructor sets up the agent by:
@@ -142,24 +142,13 @@ If you need more information to complete a request, ask the user for it.`
         }
     }
 
-    private getSessionId(userSessionId?: string): string {
-        // Use provided session ID or generate a default one
-        if (userSessionId) {
-            return userSessionId;
-        }
-        // For demo purposes, using a default session
-        // In a real app, this would come from the browser session
-        return 'default-session';
-    }
-
     /**
      * Processes a user message by invoking the LangGraph agent and returns the assistant's response.
      *
      * @param message - The user's input message to be processed.
-     * @param sessionId - (Optional) The session identifier to maintain conversation context.
      * @returns A promise that resolves to a `ChatMessage` object containing the assistant's reply.
      */
-    async processMessage(message: string, sessionId?: string): Promise<ChatMessage> {
+    async processMessage(message: string): Promise<ChatMessage> {
         if (!this.agent) {
             return {
                 role: 'assistant',
@@ -168,7 +157,6 @@ If you need more information to complete a request, ask the user for it.`
         }
 
         try {
-            const currentSessionId = this.getSessionId(sessionId);
             // Invoke the agent with memory
             const result = await this.agent.invoke(
                 { 
@@ -178,7 +166,9 @@ If you need more information to complete a request, ask the user for it.`
                 },
                 { 
                     configurable: { 
-                        thread_id: currentSessionId 
+                        // Easy Auth is enabled at App Service, so this sample intentionally uses
+                        // one authenticated conversation thread managed on the server.
+                        thread_id: this.conversationThreadId
                     } 
                 }
             );

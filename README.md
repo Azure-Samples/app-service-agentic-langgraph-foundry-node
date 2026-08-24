@@ -12,6 +12,13 @@ See [Tutorial: Build an agentic web app in Azure App Service with LangGraph or F
 - **LangGraph Agent**: Chat with an agent powered by LangGraph.
 - **Foundry agent**: Chat with an agent powered by Foundry agent Service.
 - **OpenAPI Schema**: Enables integration with Foundry agents.
+- **App Service Easy Auth**: Infrastructure enables Microsoft Entra authentication for all API endpoints.
+
+## Security configuration note
+
+The Bicep template enables App Service Easy Auth (`authsettingsV2`) and expects
+an Entra app registration client ID in `AZURE_AUTH_APP_CLIENT_ID` during
+`azd up`.
 
 ## Project Structure
 

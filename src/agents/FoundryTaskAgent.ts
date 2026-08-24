@@ -67,7 +67,8 @@ export class FoundryTaskAgent {
             this.openAIClient = await this.project.getOpenAIClient();
             this.agentName = agentName;
             
-            // Create a conversation for this session
+            // Easy Auth protects this app at App Service, so this sample intentionally
+            // keeps one server-managed authenticated conversation for the Foundry path.
             const conversation = await this.openAIClient.conversations.create({
                 items: [],
             });

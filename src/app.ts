@@ -13,11 +13,6 @@ import { LangGraphTaskAgent } from './agents/LangGraphTaskAgent.js';
 import { FoundryTaskAgent } from './agents/FoundryTaskAgent.js';
 import { createApiRoutes } from './routes/api.js';
 
-// Types
-import { 
-    ChatRequest
-} from './types/index.js';
-
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -55,6 +50,7 @@ export class TaskManagerApp {
     private setupRoutes(): void {
         // Use the API routes module with /api prefix
         const apiRouter = createApiRoutes(this.taskService, this.langGraphAgent, this.foundryAgent);
+        // API auth is enforced by App Service Easy Auth (infra/main.bicep authsettingsV2).
         this.app.use('/api', apiRouter);
 
         // Serve React app
