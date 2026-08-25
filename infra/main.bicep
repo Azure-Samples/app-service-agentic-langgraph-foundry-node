@@ -82,6 +82,7 @@ resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
       runtimeVersion: '~1'
     }
     globalValidation: {
+      excludedPaths: []
       requireAuthentication: true
       unauthenticatedClientAction: 'RedirectToLoginPage'
       redirectToProvider: 'azureActiveDirectory'

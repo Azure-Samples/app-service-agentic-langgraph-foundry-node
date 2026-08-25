@@ -9,24 +9,11 @@ param webAppUrl string
 @description('Principal ID of the user-assigned identity used by App Service authentication')
 param managedIdentityPrincipalId string
 
-var microsoftGraphAppId = '00000003-0000-0000-c000-000000000000'
-var userReadScopeId = 'e1fe6dd8-ba31-4d61-89e7-88639da4683d'
-
 resource app 'Microsoft.Graph/applications@v1.0' = {
   uniqueName: 'task-manager-${envName}'
   displayName: 'Task Manager (${envName})'
   signInAudience: 'AzureADMyOrg'
-  requiredResourceAccess: [
-    {
-      resourceAppId: microsoftGraphAppId
-      resourceAccess: [
-        {
-          id: userReadScopeId
-          type: 'Scope'
-        }
-      ]
-    }
-  ]
+  requiredResourceAccess: []
   web: {
     homePageUrl: webAppUrl
     implicitGrantSettings: {
@@ -51,6 +38,10 @@ resource app 'Microsoft.Graph/applications@v1.0' = {
 
 resource servicePrincipal 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: app.appId
+  tags: [
+    'AppServiceIntegratedApp'
+    'WindowsAzureActiveDirectoryIntegratedApp'
+  ]
 }
 
 output clientId string = app.appId
