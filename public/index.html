@@ -177,10 +177,6 @@
             const [currentMessage, setCurrentMessage] = useState('');
             const [loading, setLoading] = useState(false);
             const [selectedAgent, setSelectedAgent] = useState('langgraph');
-            const [sessionIds] = useState(() => ({
-                langgraph: Math.random().toString(36).substr(2, 9),
-                foundry: Math.random().toString(36).substr(2, 9)
-            }));
 
             // Get current messages based on selected agent
             const currentMessages = selectedAgent === 'langgraph' ? messagesLangGraph : messagesFoundry;
@@ -196,14 +192,12 @@
 
                 try {
                     const endpoint = selectedAgent === 'langgraph' ? '/api/chat/langgraph' : '/api/chat/foundry';
-                    const sessionId = sessionIds[selectedAgent];
                     
                     const response = await fetch(endpoint, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
-                            message: userMessage.content,
-                            sessionId: sessionId
+                            message: userMessage.content
                         })
                     });
 

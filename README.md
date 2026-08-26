@@ -12,6 +12,27 @@ See [Tutorial: Build an agentic web app in Azure App Service with LangGraph or F
 - **LangGraph Agent**: Chat with an agent powered by LangGraph.
 - **Foundry agent**: Chat with an agent powered by Foundry agent Service.
 - **OpenAPI Schema**: Enables integration with Foundry agents.
+- **App Service authentication**: Infrastructure enables Microsoft Entra authentication for all API endpoints.
+
+## Security configuration note
+
+The Bicep template enables App Service authentication (`authsettingsV2`) with
+Microsoft Entra ID. The Microsoft Graph Bicep extension creates the tenant-local
+app registration, service principal, and federated identity credential. App
+Service uses a user-assigned managed identity as its client assertion, so the
+authentication setup is fully declarative and does not use client secrets.
+
+When a Foundry OpenAPI tool calls the protected task API, configure the parent
+Foundry resource identity's application ID in the AZD environment:
+
+```bash
+azd env set AZURE_AI_FOUNDRY_ACCOUNT_CLIENT_ID <application-id>
+azd provision
+```
+
+The deployment prints the managed identity audience to use in the OpenAPI tool.
+When you run `azd down`, the template also deletes the tenant-level Entra
+application created for App Service authentication.
 
 ## Project Structure
 

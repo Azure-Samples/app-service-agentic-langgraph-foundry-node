@@ -247,14 +247,14 @@ export function createApiRoutes(
 
     router.post('/chat/langgraph', async (req: Request, res: Response) => {
         try {
-            const { message, sessionId }: ChatRequest = req.body;
+            const { message }: ChatRequest = req.body;
             
             if (!message) {
                 res.status(400).json({ error: 'Message is required' });
                 return;
             }
 
-            const response = await langGraphAgent.processMessage(message, sessionId);
+            const response = await langGraphAgent.processMessage(message);
             res.json(response);
         } catch (error) {
             console.error('Error in LangGraph chat:', error);
@@ -264,7 +264,7 @@ export function createApiRoutes(
 
     router.post('/chat/foundry', async (req: Request, res: Response) => {
         try {
-            const { message, sessionId }: ChatRequest = req.body;
+            const { message }: ChatRequest = req.body;
             
             if (!message) {
                 res.status(400).json({ error: 'Message is required' });

@@ -2,6 +2,31 @@
 name: TaskManagerNodeAgents
 metadata:
   template: nodejs-appservice
+hooks:
+  # Display the audience needed when configuring a Foundry OpenAPI tool.
+  postprovision:
+    posix:
+      shell: sh
+      run: printf '\nFoundry OpenAPI managed identity audience:\n\t%s\n\n' "$AZURE_AUTH_APP_AUDIENCE"
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: Write-Host "`nFoundry OpenAPI managed identity audience:`n`t$env:AZURE_AUTH_APP_AUDIENCE`n"
+      interactive: true
+      continueOnError: true
+  # Entra applications are tenant resources and aren't deleted with the resource group.
+  postdown:
+    posix:
+      shell: sh
+      run: if [ -n "$AZURE_AUTH_APP_CLIENT_ID" ] && az ad app show --id "$AZURE_AUTH_APP_CLIENT_ID" >/dev/null 2>&1; then az ad app delete --id "$AZURE_AUTH_APP_CLIENT_ID" && printf 'Deleted App Service authentication application %s.\n' "$AZURE_AUTH_APP_CLIENT_ID"; fi
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: if ($env:AZURE_AUTH_APP_CLIENT_ID -and (az ad app show --id $env:AZURE_AUTH_APP_CLIENT_ID 2>$null)) { az ad app delete --id $env:AZURE_AUTH_APP_CLIENT_ID; Write-Host "Deleted App Service authentication application $env:AZURE_AUTH_APP_CLIENT_ID." }
+      interactive: true
+      continueOnError: true
 services:
   web:
     project: .

@@ -7,6 +7,9 @@
     },
     "location": {
       "value": "${AZURE_LOCATION}"
+    },
+    "foundryAccountClientId": {
+      "value": "${AZURE_AI_FOUNDRY_ACCOUNT_CLIENT_ID=}"
     }
   }
 }
