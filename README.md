@@ -31,6 +31,8 @@ azd provision
 ```
 
 The deployment prints the managed identity audience to use in the OpenAPI tool.
+When you run `azd down`, the template also deletes the tenant-level Entra
+application created for App Service authentication.
 
 ## Project Structure
 
