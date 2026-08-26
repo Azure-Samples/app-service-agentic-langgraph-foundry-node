@@ -2,6 +2,19 @@
 name: TaskManagerNodeAgents
 metadata:
   template: nodejs-appservice
+hooks:
+  # Display the audience needed when configuring a Foundry OpenAPI tool.
+  postprovision:
+    posix:
+      shell: sh
+      run: printf '\nFoundry OpenAPI managed identity audience:\n\t%s\n\n' "$AZURE_AUTH_APP_AUDIENCE"
+      interactive: true
+      continueOnError: true
+    windows:
+      shell: pwsh
+      run: Write-Host "`nFoundry OpenAPI managed identity audience:`n`t$env:AZURE_AUTH_APP_AUDIENCE`n"
+      interactive: true
+      continueOnError: true
 services:
   web:
     project: .

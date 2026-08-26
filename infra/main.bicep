@@ -2,6 +2,8 @@
 param envName string
 @description('Location for all resources')
 param location string = resourceGroup().location
+@description('Client ID of the Foundry resource managed identity allowed to call the task API')
+param foundryAccountClientId string = ''
 
 var webAppHash = toLower(substring(uniqueString(envName), 0, 7))
 var webAppName = '${envName}-node-${webAppHash}'
@@ -73,6 +75,14 @@ module entraApp 'entra-app.bicep' = {
   }
 }
 
+module entraAppApi 'entra-app-api.bicep' = {
+  name: 'entra-app-api'
+  params: {
+    applicationUniqueName: entraApp.outputs.uniqueName
+    applicationClientId: entraApp.outputs.clientId
+  }
+}
+
 resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
   name: '${webApp.name}/authsettingsV2'
   properties: {
@@ -104,9 +114,12 @@ resource webAppAuthSettings 'Microsoft.Web/sites/config@2024-11-01' = {
             'api://${entraApp.outputs.clientId}'
           ]
           defaultAuthorizationPolicy: {
-            allowedApplications: [
-              entraApp.outputs.clientId
-            ]
+            allowedApplications: concat(
+              [
+                entraApp.outputs.clientId
+              ],
+              empty(foundryAccountClientId) ? [] : [foundryAccountClientId]
+            )
             allowedPrincipals: {}
           }
         }
@@ -139,3 +152,4 @@ output SERVICE_WEB_NAME string = webApp.name
 output SERVICE_WEB_URI string = 'https://${webApp.properties.defaultHostName}'
 output AZURE_AUTH_APP_CLIENT_ID string = entraApp.outputs.clientId
 output AZURE_AUTH_APP_OBJECT_ID string = entraApp.outputs.appObjectId
+output AZURE_AUTH_APP_AUDIENCE string = entraAppApi.outputs.audience

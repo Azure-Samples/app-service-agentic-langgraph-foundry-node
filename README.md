@@ -22,6 +22,16 @@ app registration, service principal, and federated identity credential. App
 Service uses a user-assigned managed identity as its client assertion, so the
 authentication setup is fully declarative and does not use client secrets.
 
+When a Foundry OpenAPI tool calls the protected task API, configure the parent
+Foundry resource identity's application ID in the AZD environment:
+
+```bash
+azd env set AZURE_AI_FOUNDRY_ACCOUNT_CLIENT_ID <application-id>
+azd provision
+```
+
+The deployment prints the managed identity audience to use in the OpenAPI tool.
+
 ## Project Structure
 
 - `src/app.ts` — Main Express.js application entry point with middleware and route setup.

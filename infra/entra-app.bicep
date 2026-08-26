@@ -14,6 +14,9 @@ resource app 'Microsoft.Graph/applications@v1.0' = {
   displayName: 'Task Manager (${envName})'
   signInAudience: 'AzureADMyOrg'
   requiredResourceAccess: []
+  api: {
+    requestedAccessTokenVersion: 2
+  }
   web: {
     homePageUrl: webAppUrl
     implicitGrantSettings: {
@@ -46,3 +49,4 @@ resource servicePrincipal 'Microsoft.Graph/servicePrincipals@v1.0' = {
 
 output clientId string = app.appId
 output appObjectId string = app.id
+output uniqueName string = app.uniqueName
